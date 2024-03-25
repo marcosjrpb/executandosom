@@ -4,7 +4,10 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MaterialApp(home: _SimpleExampleApp()));
+
+    runApp(const MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: _SimpleExampleApp()));
 }
 
 class _SimpleExampleApp extends StatefulWidget {
@@ -74,6 +77,7 @@ class _PlayerWidgetState extends State<PlayerWidget> {
   PlayerState? _playerState;
   Duration? _duration;
   Duration? _position;
+  double _volume = 0.5;
 
   StreamSubscription? _durationSubscription;
   StreamSubscription? _positionSubscription;
@@ -132,6 +136,35 @@ class _PlayerWidgetState extends State<PlayerWidget> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
+
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 25.0), // Espaçamento lateral de 16.0
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              "Volume:",
+              style: TextStyle(
+                fontSize: 25,
+                fontWeight: FontWeight.bold,
+                color: Colors.deepPurple,
+              ),
+            ),
+          ),
+        ),
+
+
+        Slider(
+          value: _volume,
+          min: 0.0,
+          max: 1.0, // Corrigido: 1.0 em vez de 1
+          onChanged: (novoVolume) {
+            setState(() {
+              _volume = novoVolume;
+            });
+            player.setVolume(novoVolume);
+          },
+        )
+        ,
         Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -158,6 +191,20 @@ class _PlayerWidgetState extends State<PlayerWidget> {
             ),
           ],
         ),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 25.0), // Espaçamento lateral de 16.0
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              "Tempo de Reprodução:",
+              style: TextStyle(
+                fontSize: 20,
+                color: Colors.black45,
+              ),
+            ),
+          ),
+        ),
+
         Slider(
           onChanged: (value) {
             final duration = _duration;
